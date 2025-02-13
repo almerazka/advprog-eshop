@@ -44,4 +44,8 @@ public class ProductRepository {
         return productToEdit;
     }
 
+    public void delete(String productId) {
+        Product productToDelete = findProductById(productId);
+        productData.remove(productToDelete);
+    }
 }

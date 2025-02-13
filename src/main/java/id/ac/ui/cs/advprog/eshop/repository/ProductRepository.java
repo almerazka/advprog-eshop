@@ -16,6 +16,11 @@ public class ProductRepository {
         if (product.getProductId() == null || product.getProductId().isEmpty()) {
             product.setProductId(UUID.randomUUID().toString());
         }
+
+        // Validasi input sebelum menyimpan produk
+        product.setProductName(validateAndSanitizeName(product.getProductName()));
+        product.setProductQuantity(validateQuantity(product.getProductQuantity()));
+
         productData.add(product);
         return product;
     }
@@ -39,9 +44,27 @@ public class ProductRepository {
         if (productToEdit == null) {
             return null;
         }
-        productToEdit.setProductName(newProduct.getProductName());
-        productToEdit.setProductQuantity(newProduct.getProductQuantity());
+
+        // Validasi dan update data
+        productToEdit.setProductName(validateAndSanitizeName(newProduct.getProductName()));
+        productToEdit.setProductQuantity(validateQuantity(newProduct.getProductQuantity()));
         return productToEdit;
+    }
+
+    // Metode untuk validasi dan sanitasi nama produk
+    private String validateAndSanitizeName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return "Product not found";
+        }
+        return name.replaceAll("[<>%$]", "");
+    }
+
+    // Metode untuk validasi kuantitas produk (tidak boleh huruf)
+    private double validateQuantity(double quantity) {
+        if (Double.isNaN(quantity) || Double.isInfinite(quantity)) {
+            return 0; // Jika bukan angka, ubah menjadi 0
+        }
+        return Math.max(quantity, 0); // Jika negatif, ubah ke 0
     }
 
     public void delete(String productId) {

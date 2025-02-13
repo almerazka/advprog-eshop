@@ -56,7 +56,7 @@ Setiap method dirancang untuk melakukan satu tugas spesifik, misalnya `createPro
 
 **2. Preventing Injection**
 - Sanitasi karakter khusus HTML dalam nama produk
-- Penghapusan karakter yang berpotensi berbahaya menggunakan regex: [<>%$]
+- Penghapusan karakter yang berpotensi berbahaya menggunakan **regex : [<>%$]**
 ```java
 // Metode untuk validasi dan sanitasi nama produk
     private String validateAndSanitizeName(String name) {
@@ -74,6 +74,15 @@ Setiap method dirancang untuk melakukan satu tugas spesifik, misalnya `createPro
 public Product() {
         this.productId = UUID.randomUUID().toString();
     }
+...
+ if (productToEdit == null) {
+            return null;
+        }
+
+        // Validasi dan update data
+        productToEdit.setProductName(validateAndSanitizeName(newProduct.getProductName()));
+        productToEdit.setProductQuantity(validateQuantity(newProduct.getProductQuantity()));
+        return productToEdit;
 ```
 
 ### Mistakes Found and Advice

@@ -6,17 +6,12 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public class ProductRepository {
-    private List<Product> productData = new ArrayList<>();
+    private final List<Product> productData = new ArrayList<>();
 
     public Product create(Product product) {
-        if (product.getProductId() == null || product.getProductId().isEmpty()) {
-            product.setProductId(UUID.randomUUID().toString());
-        }
-
         // Validasi input sebelum menyimpan produk
         product.setProductName(validateAndSanitizeName(product.getProductName()));
         product.setProductQuantity(validateQuantity(product.getProductQuantity()));

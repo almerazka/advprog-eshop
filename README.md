@@ -93,8 +93,22 @@ public Product() {
 5. Method _delete_ mengizinkan menghapus item tanpa memeriksa apakah item tersebut ada atau tidak. Solusinya verifikasi produk sebelum mencoba menghapus.
 6. Beberapa logika validasi diulang di dalam metode yang berbeda. Solusinya ekstrak logika validasi ke dalam metode terpisah yang dapat digunakan kembali.
 7. Penggunaan `ArrayList` untuk menyimpan data product yang kurang efisien dibandingkan menggunakan struktur data yang lebih optimal seperti `HashMap` atau `TreeMap` untuk pencarian yang lebih cepat.
+8. Untuk mengikuti best practice dalam `RESTful API`, kita bisa mengganti metode `GET` dan `POST` dengan `PUT` untuk edit dan `DELETE` untuk hapus. Ini akan lebih sesuai dengan standar HTTP.
 
-
-### How Improve Code?
+### How To Improve Code?
 Kalau mau meningkatkan kode, pertama saya pahami dulu alur dan fungsinya, lalu cek apakah ada bug, duplikasi, atau bagian yang kurang efisien. Saya juga berusaha membuat kode lebih rapi dengan memberi nama variabel yang jelas, memecah logika kompleks ke dalam metode atau kelas yang lebih spesifik, dan menghindari duplikasi. 
-Selain itu, saya juga memastikan keamanan kode dengan validasi input, memakai UUID untuk ID unik, dan mencegah celah keamanan seperti SQL Injection atau XSS. ika masih ada kendala, saya cari solusi di forum seperti Discord Advanced Programming, Stack Overflow, atau Google. Kalau belum terpecahkan, saya tanya asisten dosen atau teman, sambil mencoba alternatif lain seperti bantuan AI seperti ChatGPT.
+Selain itu, saya juga memastikan keamanan kode dengan validasi input, memakai UUID untuk ID unik, dan mencegah celah keamanan seperti SQL Injection atau XSS. Jika masih ada kendala, saya cari solusi di forum seperti Discord Advanced Programming, Stack Overflow, atau Google. Kalau belum terpecahkan, saya akan mencoba bertanya kepada asisten dosen atau teman, sambil mencoba alternatif lain seperti bantuan AI seperti ChatGPT.
+
+## Reflection 2
+### _Unit Testing_
+1. **_How Do I Feel After Writing Unit Tests?_**
+Setelah menulis unit test, saya merasa lebih yakin terhadap kualitas kode yang saya buat. Unit test memungkinkan saya untuk menguji fitur tanpa harus membuka dan mengeceknya secara manual, cukup dengan menjalankan test yang sudah disiapkan oleh fitur tersebut. Selain itu, dengan adanya unit test, proses _debugging_ menjadi lebih mudah, karena jika tiba-tiba terdapat kesalahan, kita bisa langsung mengetahui bagian mana yang bermasalah. Hal ini tidak hanya menghemat waktu, tetapi juga memastikan bahwa setiap perubahan dalam kode tetap berjalan dengan benar.
+
+2. **_How Many Unit Tests Should Be in a Class?_**
+Menurut saya, tidak ada batasan pasti mengenai jumlah unit test dalam sebuah class. Semakin banyak test yang dibuat, semakin baik, asalkan tetap relevan dan tidak berlebihan. Idealnya, setiap metode atau fitur utama dalam kelas harus memiliki setidaknya satu atau lebih pengujian unit, entah itu kita mau nguji skenario positif, negatif, ataupun batasnya. 
+
+3. **How to Make Sure Our Unit Tests Are Enough?**
+Salah satu cara memastikan unit test mencakup seluruh bagian kode adalah dengan menggunakan _code coverage_, yang mengukur sejauh mana kode telah diuji dalam bentuk persentase. Berdasarkan referensi yang saya baca, _code coverage_ sekitar 80% sudah cukup baik, seperti yang diterapkan dalam mata kuliah PBP kemarin. Namun, perlu diingat bahwa code coverage 100% tidak selalu menjamin kode bebas dari bug, karena beberapa skenario edge case mungkin masih terlewat.
+
+4. **Refleksi Tentang Clean Code dalam Functional Test**
+Setelah menulis _CreateProductFunctionalTest.java_, muncul kebutuhan untuk menambahkan functional test lain, seperti pengujian fitur edit produk. Jika kita membuat kelas baru dengan setup dan variabel instance yang sama seperti sebelumnya, hal ini dapat mengurangi kualitas kode karena terjadi duplikasi. Akibatnya, prinsip DRY (Don't Repeat Yourself) tidak diterapkan dengan baik. Untuk mengatasi ini, sebaiknya gunakan _base test class_ agar setup dapat digunakan ulang tanpa harus menyalin kode di setiap test suite. Selain itu, _parameterized tests_ dapat digunakan untuk menghindari pengulangan test case yang memiliki pola serupa.

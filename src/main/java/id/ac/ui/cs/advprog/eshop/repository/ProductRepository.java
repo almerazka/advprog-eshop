@@ -36,8 +36,8 @@ public class ProductRepository {
     public Product edit(String productId, Product newProduct) {
         Product productToEdit = findProductById(productId);
 
-        if (productToEdit == null) {
-            return null;
+        if (productToEdit == null || newProduct == null) {
+            return null; // Produk tidak ditemukan atau input null
         }
 
         // Validasi dan update data
@@ -59,11 +59,16 @@ public class ProductRepository {
         if (Double.isNaN(quantity) || Double.isInfinite(quantity)) {
             return 0; // Jika bukan angka, ubah menjadi 0
         }
-        return Math.max(quantity, 0); // Jika negatif, ubah ke 0
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Product quantity cannot be negative");
+        }
+        return quantity;
     }
 
     public void delete(String productId) {
         Product productToDelete = findProductById(productId);
-        productData.remove(productToDelete);
+        if (productToDelete != null) {
+            productData.remove(productToDelete);
+        }
     }
 }

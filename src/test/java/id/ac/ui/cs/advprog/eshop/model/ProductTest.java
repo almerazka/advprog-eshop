@@ -25,4 +25,18 @@ class ProductTest {
     void testGetProductQuantity() {
         assertEquals(100, this.product.getProductQuantity());
     }
+    @Test
+    void testDefaultConstructor_GeneratesUUID() {
+        Product newProduct = new Product();
+        assertNotNull(newProduct.getProductId()); // UUID should not be null
+        assertFalse(newProduct.getProductId().isEmpty()); // UUID should not be empty
+    }
+    @Test
+    void testSetters_UpdateValuesCorrectly() {
+        product.setProductName("Shampoo Clean");
+        product.setProductQuantity(50);
+
+        assertEquals("Shampoo Clean", product.getProductName());
+        assertEquals(50, product.getProductQuantity());
+    }
 }

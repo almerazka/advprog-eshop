@@ -19,7 +19,7 @@ public class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
-
+        // Tidak ada inisialisasi yang diperlukan untuk saat ini
     }
 
     @Test

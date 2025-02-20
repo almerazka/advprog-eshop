@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Iterator;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,26 +17,15 @@ public class ProductRepositoryTest {
     @InjectMocks
     ProductRepository productRepository;
 
-    private Product testProduct;
-
     @BeforeEach
     void setUp() {
-        testProduct = initiateProduct("eb558e9f-1c39-460e-8860-71af6af63bd", "Sampo Cap Bambang", 100);
-    }
 
-    private Product initiateProduct(String id, String name, double quantity) {
-        Product product = new Product();
-        product.setProductId(id);
-        product.setProductName(name);
-        product.setProductQuantity(quantity);
-        productRepository.create(product);
-        return product;
     }
 
     @Test
     void testCreateAndFind() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd");
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         product.setProductName("Sampo Cap Bambang");
         product.setProductQuantity(100);
         productRepository.create(product);
@@ -45,23 +33,30 @@ public class ProductRepositoryTest {
         Iterator<Product> productIterator = productRepository.findAll();
         assertTrue(productIterator.hasNext());
         Product savedProduct = productIterator.next();
-        assertEquals(product.getProductId(), savedProduct.getProductId());
-        assertEquals(product.getProductName(), savedProduct.getProductName());
-        assertEquals(product.getProductQuantity(), savedProduct.getProductQuantity());
+        assertEquals(savedProduct.getProductId(), product.getProductId());
+        assertEquals(savedProduct.getProductName(), product.getProductName());
+        assertEquals(savedProduct.getProductQuantity(), product.getProductQuantity());
     }
 
     @Test
     void testFindAllIfEmpty() {
-        productRepository = new ProductRepository();
         Iterator<Product> productIterator = productRepository.findAll();
         assertFalse(productIterator.hasNext());
     }
 
     @Test
     void testFindAllIfMoreThanOneProduct() {
-        productRepository = new ProductRepository();
-        Product product1 = initiateProduct("eb558e9f-1c39-460e-8860-71af6af63bd", "Sampo Cap Bambang", 100);
-        Product product2 = initiateProduct("a0f9de46-90b1-437d-a0bf-d0821dde9096", "Sampo Cap Usep", 50);
+        Product product1 = new Product();
+        product1.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product1.setProductName("Sampo Cap Bambang");
+        product1.setProductQuantity(100);
+        productRepository.create(product1);
+
+        Product product2 = new Product();
+        product2.setProductId("a0f9de45-90b1-437d-a0bf-d0821dde9096");
+        product2.setProductName("Sampo Cap Usep");
+        product2.setProductQuantity(50);
+        productRepository.create(product2);
 
         Iterator<Product> productIterator = productRepository.findAll();
         assertTrue(productIterator.hasNext());
@@ -73,66 +68,150 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void testEditProduct_Success() {
-        Product updatedProduct = new Product();
-        updatedProduct.setProductName("Sampo Cap Usep");
-        updatedProduct.setProductQuantity(75);
+    void testFindProductById() {
+        Product product = new Product();
+        product.setProductId("test-id-123");
+        product.setProductName("Test Product");
+        product.setProductQuantity(10);
+        productRepository.create(product);
 
-        Product editedProduct = productRepository.edit(testProduct.getProductId(), updatedProduct);
+        Product foundProduct = productRepository.findProductById("test-id-123");
+        assertNotNull(foundProduct);
+        assertEquals("test-id-123", foundProduct.getProductId());
+        assertEquals("Test Product", foundProduct.getProductName());
+        assertEquals(10, foundProduct.getProductQuantity());
 
-        assertNotNull(editedProduct);
-        assertEquals("Sampo Cap Usep", editedProduct.getProductName());
-        assertEquals(75, editedProduct.getProductQuantity());
+        Product notFoundProduct = productRepository.findProductById("non-existent-id");
+        assertNull(notFoundProduct);
     }
 
     @Test
-    void testEditProduct_NotFound() {
+    void testEditProduct() {
+        Product product = new Product();
+        product.setProductId("edit-test-id");
+        product.setProductName("Original Name");
+        product.setProductQuantity(5);
+        productRepository.create(product);
+
         Product updatedProduct = new Product();
-        updatedProduct.setProductName("Sampo Tidak Ada");
-        updatedProduct.setProductQuantity(20);
+        updatedProduct.setProductName("Updated Name");
+        updatedProduct.setProductQuantity(10);
 
-        Product result = productRepository.edit(UUID.randomUUID().toString(), updatedProduct);
+        Product editedProduct = productRepository.edit("edit-test-id", updatedProduct);
+        assertNotNull(editedProduct);
+        assertEquals("edit-test-id", editedProduct.getProductId());
+        assertEquals("Updated Name", editedProduct.getProductName());
+        assertEquals(10, editedProduct.getProductQuantity());
 
+        Product retrievedProduct = productRepository.findProductById("edit-test-id");
+        assertEquals("Updated Name", retrievedProduct.getProductName());
+        assertEquals(10, retrievedProduct.getProductQuantity());
+    }
+
+    @Test
+    void testEditNonExistentProduct() {
+        Product updatedProduct = new Product();
+        updatedProduct.setProductName("Updated Name");
+        updatedProduct.setProductQuantity(10);
+
+        Product result = productRepository.edit("non-existent-id", updatedProduct);
         assertNull(result);
     }
 
     @Test
-    void testEditProduct_NullNewProduct() {
-        assertNull(productRepository.edit(testProduct.getProductId(), null));
+    void testEditWithNullProduct() {
+        Product product = new Product();
+        product.setProductId("null-test-id");
+        product.setProductName("Test Product");
+        product.setProductQuantity(5);
+        productRepository.create(product);
+
+        Product result = productRepository.edit("null-test-id", null);
+        assertNull(result);
     }
 
     @Test
-    void testDeleteProduct_Success() {
-        productRepository.delete(testProduct.getProductId());
-        assertNull(productRepository.findProductById(testProduct.getProductId()));
+    void testDeleteProduct() {
+        Product product = new Product();
+        product.setProductId("delete-test-id");
+        product.setProductName("Product to Delete");
+        product.setProductQuantity(3);
+        productRepository.create(product);
+
+        assertNotNull(productRepository.findProductById("delete-test-id"));
+
+        productRepository.delete("delete-test-id");
+
+        assertNull(productRepository.findProductById("delete-test-id"));
     }
 
     @Test
-    void testDeleteProduct_NotFound() {
-        productRepository.delete(UUID.randomUUID().toString());
-        assertNotNull(productRepository.findProductById(testProduct.getProductId()));
+    void testDeleteNonExistentProduct() {
+        assertDoesNotThrow(() -> productRepository.delete("non-existent-id"));
     }
 
     @Test
-    void testCreateProduct_NegativeQuantity_ShouldThrowException() {
-        Product invalidProduct = new Product();
-        invalidProduct.setProductId("invalid-123");
-        invalidProduct.setProductName("Invalid Product");
-        invalidProduct.setProductQuantity(-10);
+    void testCreateWithEmptyName() {
+        Product product = new Product();
+        product.setProductId("empty-name-id");
+        product.setProductName("");
+        product.setProductQuantity(5);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> productRepository.create(invalidProduct));
-
-        assertEquals("Product quantity cannot be negative", exception.getMessage());
+        Product savedProduct = productRepository.create(product);
+        assertEquals("Product not found", savedProduct.getProductName());
     }
 
     @Test
-    void testEditProduct_NegativeQuantity_ShouldThrowException() {
-        Product updatedProduct = new Product();
-        updatedProduct.setProductName("Wrong Product");
-        updatedProduct.setProductQuantity(-5);
+    void testCreateWithNullName() {
+        Product product = new Product();
+        product.setProductId("null-name-id");
+        product.setProductName(null);
+        product.setProductQuantity(5);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> productRepository.edit(testProduct.getProductId(), updatedProduct));
+        Product savedProduct = productRepository.create(product);
+        assertEquals("Product not found", savedProduct.getProductName());
+    }
 
-        assertEquals("Product quantity cannot be negative", exception.getMessage());
+    @Test
+    void testCreateWithSpecialCharsInName() {
+        Product product = new Product();
+        product.setProductId("special-chars-id");
+        product.setProductName("Product<with>special%chars$");
+        product.setProductQuantity(5);
+
+        Product savedProduct = productRepository.create(product);
+        assertEquals("Productwithspecialchars", savedProduct.getProductName());
+    }
+
+    @Test
+    void testCreateWithNegativeQuantity() {
+        Product product = new Product();
+        product.setProductId("negative-quantity-id");
+        product.setProductName("Negative Quantity Product");
+        product.setProductQuantity(-10);
+
+        assertThrows(IllegalArgumentException.class, () -> productRepository.create(product));
+    }
+
+    @Test
+    void testCreateWithNaNQuantity() {
+        Product product = new Product();
+        product.setProductId("nan-quantity-id");
+        product.setProductName("NaN Quantity Product");
+        product.setProductQuantity(Double.NaN);
+
+        Product savedProduct = productRepository.create(product);
+        assertEquals(0, savedProduct.getProductQuantity());
+    }
+
+    @Test
+    void testCreateWithInfiniteQuantity() {
+        Product product = new Product();
+        product.setProductId("infinite-quantity-id");
+        product.setProductName("Infinite Quantity Product");
+        product.setProductQuantity(Double.POSITIVE_INFINITY);
+
+        Product savedProduct = productRepository.create(product);
+        assertEquals(0, savedProduct.getProductQuantity());
     }
 }

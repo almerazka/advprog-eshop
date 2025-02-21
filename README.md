@@ -116,3 +116,135 @@ Salah satu cara memastikan unit test mencakup seluruh bagian kode adalah dengan 
 4. **Refleksi Tentang Clean Code dalam Functional Test**
    
 Setelah menulis _CreateProductFunctionalTest.java_, muncul kebutuhan untuk menambahkan functional test lain, seperti pengujian fitur edit produk. Jika kita membuat kelas baru dengan setup dan variabel instance yang sama seperti sebelumnya, hal ini dapat mengurangi kualitas kode karena terjadi duplikasi. Akibatnya, prinsip DRY (Don't Repeat Yourself) tidak diterapkan dengan baik. Untuk mengatasi ini, sebaiknya gunakan _base test class_ agar setup dapat digunakan ulang tanpa harus menyalin kode di setiap test suite. Selain itu, _parameterized tests_ dapat digunakan untuk menghindari pengulangan test case yang memiliki pola serupa.
+
+</details>
+<details>
+<summary>Module 2: CI/CD & DevOps</summary>
+
+### SonarCloud Report
+
+### [E-Shop]
+
+## Reflection
+### Daftar _Code Quality Issue_ yang telah diperbaiki
+#### 1. **Duplicate String Literal**
+📌 **Permasalahan** :
+
+Dalam kode _ProductController.java_, string `"redirect:/product/list"` digunakan berulang kali di berbagai metode. 
+
+🔍 **Mengapa ini menjadi masalah?**
+
+Menggunakan string literal berulang kali melanggar prinsip **DRY (Don't Repeat Yourself)**, meningkatkan risiko bug, dan menyulitkan pengelolaan kode. Jika URL redirect perlu diubah, setiap instance harus diedit secara manual, berpotensi menimbulkan inkonsistensi yang menyebabkan error. Kesalahan kecil seperti tambahan / atau perbedaan kapitalisasi dapat membuat aplikasi tidak berfungsi dengan benar. Hardcoding juga membuat perubahan lebih sulit, karena harus mencari dan mengganti semua instance string di berbagai lokasi, yang rentan terhadap kesalahan dan inkonsistensi.
+
+❌ **Sebelum Perbaikan**
+```java
+@GetMapping("/edit/{productId}")
+public String editProductPage(@PathVariable String productId, Model model) {
+    Product product = service.findProductById(productId);
+    if (product == null) {
+        return "redirect:/product/list"; // DUPLIKASI #1
+    }
+    model.addAttribute("product", product);
+    return "EditProduct";
+}
+```
+✅ **Solusi** : Menggunakan Constant
+```java
+private static final String REDIRECT_PRODUCT_LIST = "redirect:/product/list";
+
+@GetMapping("/edit/{productId}")
+public String editProductPage(@PathVariable String productId, Model model) {
+    Product product = service.findProductById(productId);
+    if (product == null) {
+        return REDIRECT_PRODUCT_LIST;
+    }
+    model.addAttribute("product", product);
+    return "EditProduct";
+}
+```
+
+#### 2. **Manual Exception Handling**
+📌 **Permasalahan** :
+
+Metode `contextLoads()` kosong tanpa penjelasan atau fungsionalitas yang jelas, yang dapat membingungkan pengembang lain. SonarCloud atau alat analisis kode lainnya mendeteksi ini sebagai masalah karena tidak ada implementasi yang valid dalam metode pengujian.
+
+🔍 **Mengapa ini menjadi masalah?**
+
+Jika metode pengujian tidak memiliki implementasi yang jelas, pengujian menjadi tidak bermakna. SonarCloud menyarankan agar kita menambahkan komentar yang menjelaskan alasan metode kosong, melempar `UnsupportedOperationException`, atau menyelesaikan implementasinya agar benar-benar menguji sesuatu.
+
+❌ **Sebelum Perbaikan**
+```java
+@SpringBootTest
+class EshopApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+    @Test
+    void testApplicationStarts() {
+        EshopApplication.main(new String[] {});
+    }
+}
+```
+✅ **Solusi** : Menggunakan `assertThrows()`
+
+Alih-alih membiarkan metode kosong, kita dapat menggunakan `assertThrows()` untuk memastikan bahwa jika ada error saat inisialisasi, pengujian tetap dapat menangkapnya.
+```java
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@Test
+void contextLoads() {
+    // Menguji apakah aplikasi gagal dijalankan dengan error yang sesuai
+    assertThrows(Exception.class, () -> EshopApplication.main(new String[]{}));
+}
+```
+
+#### 3. **Avoid public Modifier in Test Classes**
+📌 **Permasalahan** :
+
+Dalam JUnit 5, test class tidak memerlukan modifier `public`. Penggunaan `public` yang tidak perlu hanya menambah kompleksitas tanpa memberikan manfaat tambahan.
+
+🔍 **Mengapa ini menjadi masalah?**
+
+JUnit 5 bisa menjalankan test tanpa `public`, karena framework ini menggunakan refleksi untuk mengeksekusi metode pengujian. Secara default, method yang ada di dalam _interface_ sudah bersifat `public`, jadi modifier tersebut bisa dihapus untuk membuat kode lebih bersih.
+Dengan menghapus `public`, kita dapat menjaga keterbacaan dan konsistensi kode tanpa mengubah fungsionalitasnya.
+
+❌ **Sebelum Perbaikan**
+```java
+@public class CreateProductFunctionalTest { 
+    ...
+}
+```
+✅ **Solusi** : Cukup tulis tanpa `public`
+```java
+class CreateProductFunctionalTest { 
+
+}
+```
+
+#### 4. **Clarify empty method with Comment**
+📌 **Permasalahan** :
+
+Metode `setUp()` dalam unit test awalnya kosong tanpa komentar atau implementasi yang jelas, sehingga bisa membingungkan.
+
+🔍 **Mengapa ini menjadi masalah?**
+
+Metode `setUp()` dijalankan sebelum setiap test untuk melakukan inisialisasi. Jika kosong tanpa penjelasan, pengembang lain mungkin tidak tahu apakah memang belum diperlukan atau ada yang terlupakan.
+
+❌ **Sebelum Perbaikan**
+```java
+@BeforeEach
+void setUp() {
+    
+}
+```
+✅ **Solusi** : Menambahkan komentar untuk menjelaskan fungsinya meskipun masih kosong
+```java
+void setUp() {
+    // Metode ini dipanggil sebelum setiap test untuk inisialisasi, jika diperlukan.
+}
+```
+
+### Apakah Implementasi CI/CD Sudah Sesuai dengan Definisinya?
+Menurut saya, implementasi **CI/CD** dalam proyek ini sudah cukup memenuhi prinsip _Continuous Integration_ dan _Continuous Deployment_. Saya menggunakan **GitHub Actions** untuk menjalankan beberapa **workflow** otomatis seperti `ci.yml`, `scorecard.yml`, dan `sonarcloud.yml`. Dimana setiap kali ada perubahan kode, melalui **push** atau **pull request**, **workflow** ini langsung berjalan otomatis untuk memastikan kode diuji dan dianalisis sebelum digabung ke branch utama. **SonarCloud** juga digunakan untuk mengevaluasi kualitas kode dan mengidentifikasi potensi bug. Untuk **CD** sendiri, saya mengandalkan **Koyeb** sebagai platform deployment otomatis. Setelah kode melewati tahap pengujian dan validasi, aplikasi langsung dideploy tanpa perlu proses manual sehingga dapat dipastikan aplikasi selalu dalam versi terbaru. Dengan **workflow** ini, seluruh proses mulai dari kode, pengujian, review, hingga deployment berjalan otomatis, sehingga lebih efisien dan sesuai dengan prinsip CI/CD.

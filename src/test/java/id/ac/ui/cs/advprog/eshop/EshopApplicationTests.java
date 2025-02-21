@@ -10,6 +10,7 @@ class EshopApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// Menguji apakah aplikasi dapat dijalankan tanpa error saat diinisialisasi oleh Spring Boot
 		assertDoesNotThrow(() -> EshopApplication.main(new String[]{}));
 	}
 }

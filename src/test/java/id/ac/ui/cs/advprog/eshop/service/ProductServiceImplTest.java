@@ -35,6 +35,7 @@ class ProductServiceImplTest {
         testProduct.setProductQuantity(100);
     }
 
+    // Menguji apakah produk dapat dibuat dengan benar
     @Test
     void testCreateProduct() {
         when(productRepository.create(testProduct)).thenReturn(testProduct);
@@ -48,6 +49,7 @@ class ProductServiceImplTest {
         verify(productRepository, times(1)).create(testProduct);
     }
 
+    // Menguji apakah semua produk dapat ditemukan
     @Test
     void testFindAllProducts() {
         List<Product> mockProducts = new ArrayList<>();
@@ -63,6 +65,7 @@ class ProductServiceImplTest {
         verify(productRepository, times(1)).findAll();
     }
 
+    // Menguji apakah produk dapat ditemukan berdasarkan ID (sukses)
     @Test
     void testFindProductById_Success() {
         when(productRepository.findProductById(testProduct.getProductId())).thenReturn(testProduct);
@@ -74,6 +77,7 @@ class ProductServiceImplTest {
         verify(productRepository, times(1)).findProductById(testProduct.getProductId());
     }
 
+    // Menguji jika produk tidak ditemukan berdasarkan ID
     @Test
     void testFindProductById_NotFound() {
         when(productRepository.findProductById("invalid-id")).thenReturn(null);
@@ -84,6 +88,7 @@ class ProductServiceImplTest {
         verify(productRepository, times(1)).findProductById("invalid-id");
     }
 
+    // Menguji apakah produk dapat diedit dengan benar
     @Test
     void testEditProduct_Success() {
         Product updatedProduct = new Product("Sampo Cap Baru", 75);
@@ -97,6 +102,7 @@ class ProductServiceImplTest {
         verify(productRepository, times(1)).edit(testProduct.getProductId(), updatedProduct);
     }
 
+    // Menguji jika produk yang ingin diedit tidak ditemukan
     @Test
     void testEditProduct_NotFound() {
         Product updatedProduct = new Product("Tidak Ada", 20);
@@ -108,6 +114,7 @@ class ProductServiceImplTest {
         verify(productRepository, times(1)).edit("invalid-id", updatedProduct);
     }
 
+    // Menguji apakah produk dapat dihapus dengan benar
     @Test
     void testDeleteProduct() {
         doNothing().when(productRepository).delete(testProduct.getProductId());

@@ -22,6 +22,7 @@ public class ProductRepositoryTest {
         // Tidak ada inisialisasi yang diperlukan untuk saat ini
     }
 
+    // Menguji apakah produk dapat dibuat dan ditemukan dalam daftar
     @Test
     void testCreateAndFind() {
         Product product = new Product();
@@ -38,12 +39,14 @@ public class ProductRepositoryTest {
         assertEquals(savedProduct.getProductQuantity(), product.getProductQuantity());
     }
 
+    // Menguji jika daftar produk kosong
     @Test
     void testFindAllIfEmpty() {
         Iterator<Product> productIterator = productRepository.findAll();
         assertFalse(productIterator.hasNext());
     }
 
+    // Menguji apakah banyak produk dapat ditemukan dalam daftar
     @Test
     void testFindAllIfMoreThanOneProduct() {
         Product product1 = new Product();
@@ -67,6 +70,7 @@ public class ProductRepositoryTest {
         assertFalse(productIterator.hasNext());
     }
 
+    // Menguji apakah banyak produk dapat ditemukan dalam daftar
     @Test
     void testFindProductById() {
         Product product = new Product();
@@ -85,6 +89,7 @@ public class ProductRepositoryTest {
         assertNull(notFoundProduct);
     }
 
+    // Menguji apakah produk dapat diperbarui dengan informasi baru
     @Test
     void testEditProduct() {
         Product product = new Product();
@@ -108,6 +113,7 @@ public class ProductRepositoryTest {
         assertEquals(10, retrievedProduct.getProductQuantity());
     }
 
+    // Menguji apakah pengeditan produk gagal jika ID tidak ditemukan
     @Test
     void testEditNonExistentProduct() {
         Product updatedProduct = new Product();
@@ -118,6 +124,7 @@ public class ProductRepositoryTest {
         assertNull(result);
     }
 
+    // Menguji apakah pengeditan produk gagal jika input produk null
     @Test
     void testEditWithNullProduct() {
         Product product = new Product();
@@ -130,6 +137,7 @@ public class ProductRepositoryTest {
         assertNull(result);
     }
 
+    // Menguji apakah produk dapat dihapus dengan benar
     @Test
     void testDeleteProduct() {
         Product product = new Product();
@@ -145,11 +153,13 @@ public class ProductRepositoryTest {
         assertNull(productRepository.findProductById("delete-test-id"));
     }
 
+    // Menguji apakah penghapusan produk yang tidak ada tidak menimbulkan error
     @Test
     void testDeleteNonExistentProduct() {
         assertDoesNotThrow(() -> productRepository.delete("non-existent-id"));
     }
 
+    // Menguji apakah nama produk kosong akan diubah menjadi "Product not found"
     @Test
     void testCreateWithEmptyName() {
         Product product = new Product();
@@ -161,6 +171,7 @@ public class ProductRepositoryTest {
         assertEquals("Product not found", savedProduct.getProductName());
     }
 
+    // Menguji apakah nama produk kosong akan diubah menjadi "Product not found"
     @Test
     void testCreateWithNullName() {
         Product product = new Product();
@@ -172,6 +183,7 @@ public class ProductRepositoryTest {
         assertEquals("Product not found", savedProduct.getProductName());
     }
 
+    // Menguji apakah karakter spesial dalam nama produk dihapus
     @Test
     void testCreateWithSpecialCharsInName() {
         Product product = new Product();
@@ -183,6 +195,7 @@ public class ProductRepositoryTest {
         assertEquals("Productwithspecialchars", savedProduct.getProductName());
     }
 
+    // Menguji apakah produk dengan kuantitas negatif akan menimbulkan exception
     @Test
     void testCreateWithNegativeQuantity() {
         Product product = new Product();
@@ -193,6 +206,7 @@ public class ProductRepositoryTest {
         assertThrows(IllegalArgumentException.class, () -> productRepository.create(product));
     }
 
+    // Menguji apakah produk dengan NaN sebagai kuantitas akan diubah menjadi 0
     @Test
     void testCreateWithNaNQuantity() {
         Product product = new Product();
@@ -204,6 +218,7 @@ public class ProductRepositoryTest {
         assertEquals(0, savedProduct.getProductQuantity());
     }
 
+    // Menguji apakah produk dengan kuantitas infinity akan diubah menjadi 0
     @Test
     void testCreateWithInfiniteQuantity() {
         Product product = new Product();

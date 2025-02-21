@@ -24,11 +24,13 @@ class HomePageFunctionalTest {
 
     private String baseUrl;
 
+    // Mengatur baseUrl sebelum setiap pengujian
     @BeforeEach
     void setUpTest() {
         baseUrl = String.format("%s:%d", testBaseUrl, serverPort);
     }
 
+    // Menguji apakah judul halaman utama sesuai dengan yang diharapkan
     @Test
     void pageTitle_isCorrect(ChromeDriver driver) throws Exception {
         // Exercise
@@ -38,6 +40,7 @@ class HomePageFunctionalTest {
         assertEquals("ADV Shop", pageTitle);
     }
 
+    // Menguji apakah pesan selamat datang pada halaman utama sesuai dengan yang diharapkan
     @Test
     void welcomeMessage_isCorrect(ChromeDriver driver) throws Exception {
         // Exercise

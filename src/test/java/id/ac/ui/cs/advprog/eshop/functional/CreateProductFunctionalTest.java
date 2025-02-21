@@ -26,17 +26,20 @@ public class CreateProductFunctionalTest {
 
     private String baseUrl;
 
+    // Mengatur baseUrl sebelum setiap pengujian
     @BeforeEach
     void setUpTest() {
         baseUrl = String.format("%s:%d", testBaseUrl, serverPort);
     }
 
+    // Menguji apakah halaman Create Product dapat diakses dengan benar
     @Test
     void createProductPage_IsCorrect(ChromeDriver driver) {
         driver.get(baseUrl + "/product/create");
         assertEquals("Create New Product", driver.getTitle());
     }
 
+    // Menguji apakah produk dapat dibuat dan muncul di daftar produk
     @Test
     void testCreateProduct_Success(ChromeDriver driver) {
         // Buka halaman Create Product

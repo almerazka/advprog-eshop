@@ -32,16 +32,18 @@ class HomePageControllerTest {
         // Tidak ada inisialisasi yang diperlukan untuk saat ini
     }
 
+    // Menguji apakah metode homePage() mengembalikan string yang sesuai
     @Test
     void testHomePageReturnString() {
         String result = homePageController.homePage();
         assertEquals("HomePage", result);
     }
 
+    // Menguji apakah permintaan GET ke "/" berhasil dan mengandung teks yang diharapkan
     @Test
     void testHomePageRequest() throws Exception {
         mvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Welcome"))); // Sesuaikan teks ini dengan halaman HTML
+                .andExpect(status().isOk())  // Pastikan HTTP status 200 (OK)
+                .andExpect(content().string(containsString("Welcome")));
     }
 }

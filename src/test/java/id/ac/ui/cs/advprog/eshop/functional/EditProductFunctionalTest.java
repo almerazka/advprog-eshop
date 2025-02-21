@@ -28,12 +28,14 @@ public class EditProductFunctionalTest {
 
     private String baseUrl;
 
+    // Mengatur baseUrl sebelum setiap pengujian dan membuat produk contoh
     @BeforeEach
     void setUp(ChromeDriver driver) {
         baseUrl = String.format("%s:%d/product/create", testBaseUrl, serverPort);
         createProduct(driver, "Sample Product", 50);
     }
 
+    // Metode untuk membuat produk sebelum pengujian
     private void createProduct(ChromeDriver driver, String name, int quantity) {
         driver.get(baseUrl);
         driver.findElement(By.id("nameInput")).sendKeys(name);
@@ -41,6 +43,7 @@ public class EditProductFunctionalTest {
         driver.findElement(By.tagName("button")).click();
     }
 
+    // Menguji apakah produk berhasil diedit
     @Test
     void editProductTest(ChromeDriver driver) {
         driver.get(String.format("%s:%d/product/list", testBaseUrl, serverPort));

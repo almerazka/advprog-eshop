@@ -30,18 +30,21 @@ class ProductControllerTest {
 
     @BeforeEach
     void setUp() {
+        // Inisialisasi objek produk untuk pengujian
         testProduct = new Product();
         testProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         testProduct.setProductName("Sampo Cap Bambang");
         testProduct.setProductQuantity(100);
     }
 
+    // Menguji apakah halaman Create Product dikembalikan dengan benar
     @Test
     void testCreateProductPage() {
         String result = productController.createProductPage(model);
         assertEquals("CreateProduct", result);
     }
 
+    // Menguji apakah produk berhasil dibuat
     @Test
     void testCreateProductPost() {
         when(productService.create(any(Product.class))).thenReturn(testProduct);
@@ -52,6 +55,7 @@ class ProductControllerTest {
         verify(productService, times(1)).create(testProduct);
     }
 
+    // Menguji apakah halaman daftar produk dikembalikan dengan benar
     @Test
     void testProductListPage() {
         when(productService.findAll()).thenReturn(null);
@@ -62,6 +66,7 @@ class ProductControllerTest {
         verify(model, times(1)).addAttribute(eq("products"), any());
     }
 
+    // Menguji apakah halaman edit produk dikembalikan jika produk ditemukan
     @Test
     void testEditProductPage_Success() {
         when(productService.findProductById(testProduct.getProductId())).thenReturn(testProduct);
@@ -72,6 +77,7 @@ class ProductControllerTest {
         verify(model, times(1)).addAttribute("product", testProduct);
     }
 
+    // Menguji apakah pengguna dialihkan jika produk tidak ditemukan
     @Test
     void testEditProductPage_NotFound() {
         when(productService.findProductById("invalid-id")).thenReturn(null);
@@ -81,6 +87,7 @@ class ProductControllerTest {
         assertEquals("redirect:/product/list", result);
     }
 
+    // Menguji apakah produk berhasil diedit
     @Test
     void testEditProduct_Success() {
         when(productService.edit(eq(testProduct.getProductId()), any(Product.class))).thenReturn(testProduct);
@@ -91,6 +98,7 @@ class ProductControllerTest {
         verify(productService, times(1)).edit(eq(testProduct.getProductId()), any(Product.class));
     }
 
+    // Menguji apakah edit produk gagal jika produk tidak ditemukan
     @Test
     void testEditProduct_NotFound() {
         when(productService.edit(eq("non-existent-id"), any(Product.class))).thenReturn(null);
@@ -101,6 +109,7 @@ class ProductControllerTest {
         verify(model, times(1)).addAttribute(eq("error"), contains("not found"));
     }
 
+    // Menguji apakah produk berhasil dihapus
     @Test
     void testDeleteProduct_Success() {
         doNothing().when(productService).delete(testProduct.getProductId());
@@ -111,6 +120,7 @@ class ProductControllerTest {
         verify(productService, times(1)).delete(testProduct.getProductId());
     }
 
+    // Menguji apakah menghapus produk yang tidak ada tetap berjalan tanpa error
     @Test
     void testDeleteProduct_NotFound() {
         doNothing().when(productService).delete("non-existent-id");

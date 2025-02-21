@@ -3,6 +3,14 @@
 * NPM     : 2306241745
 * Kelas   : Pemrograman Lanjut - A
 
+Klik link di bawah untuk melihat aplikasi!
+### [E-Shop](https://eshop-almerazka.koyeb.app/)
+
+### SonarCloud Report
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=almerazka_advprog-eshop&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=almerazka_advprog-eshop)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=almerazka_advprog-eshop&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=almerazka_advprog-eshop)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=almerazka_advprog-eshop&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=almerazka_advprog-eshop)
+
 <details>
 <summary>Module 1: Coding Standard</summary>
 
@@ -120,10 +128,6 @@ Setelah menulis _CreateProductFunctionalTest.java_, muncul kebutuhan untuk menam
 </details>
 <details>
 <summary>Module 2: CI/CD & DevOps</summary>
-
-### SonarCloud Report
-
-### [E-Shop]
 
 ## Reflection
 ### Daftar _Code Quality Issue_ yang telah diperbaiki
@@ -246,5 +250,5 @@ void setUp() {
 }
 ```
 
-### Apakah Implementasi CI/CD Sudah Sesuai dengan Definisinya?
+### Apakah implementasi CI/CD sudah sesuai dengan definisinya?
 Menurut saya, implementasi **CI/CD** dalam proyek ini sudah cukup memenuhi prinsip _Continuous Integration_ dan _Continuous Deployment_. Saya menggunakan **GitHub Actions** untuk menjalankan beberapa **workflow** otomatis seperti `ci.yml`, `scorecard.yml`, dan `sonarcloud.yml`. Dimana setiap kali ada perubahan kode, melalui **push** atau **pull request**, **workflow** ini langsung berjalan otomatis untuk memastikan kode diuji dan dianalisis sebelum digabung ke branch utama. **SonarCloud** juga digunakan untuk mengevaluasi kualitas kode dan mengidentifikasi potensi bug. Untuk **CD** sendiri, saya mengandalkan **Koyeb** sebagai platform deployment otomatis. Setelah kode melewati tahap pengujian dan validasi, aplikasi langsung dideploy tanpa perlu proses manual sehingga dapat dipastikan aplikasi selalu dalam versi terbaru. Dengan **workflow** ini, seluruh proses mulai dari kode, pengujian, review, hingga deployment berjalan otomatis, sehingga lebih efisien dan sesuai dengan prinsip CI/CD.

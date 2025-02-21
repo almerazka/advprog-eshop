@@ -11,6 +11,9 @@ Klik link di bawah untuk melihat aplikasi!
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=almerazka_advprog-eshop&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=almerazka_advprog-eshop)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=almerazka_advprog-eshop&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=almerazka_advprog-eshop)
 
+### Coverage Report
+![image](https://github.com/user-attachments/assets/f67c8c69-dcaa-48e1-b4c0-fb6dcc2f5be2)
+
 <details>
 <summary>Module 1: Coding Standard</summary>
 

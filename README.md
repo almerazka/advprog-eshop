@@ -7,6 +7,7 @@ Klik link di bawah untuk melihat aplikasi!
 ### [E-Shop](https://eshop-almerazka.koyeb.app/)
 
 ### SonarCloud Report
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=almerazka_advprog-eshop&metric=coverage)](https://sonarcloud.io/summary/new_code?id=almerazka_advprog-eshop)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=almerazka_advprog-eshop&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=almerazka_advprog-eshop)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=almerazka_advprog-eshop&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=almerazka_advprog-eshop)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=almerazka_advprog-eshop&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=almerazka_advprog-eshop)

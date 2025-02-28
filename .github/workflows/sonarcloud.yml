@@ -43,6 +43,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      - name: Build and run tests with coverage
+        run: ./gradlew clean build test jacocoTestReport
+
       - name: Analyze with SonarCloud
 
         # You can pin the exact commit or the version.
@@ -57,6 +69,9 @@ jobs:
             # mandatory
             -Dsonar.projectKey=almerazka_advprog-eshop
             -Dsonar.organization=almerazka
+            -Dsonar.java.binaries=build/classes/java/main
+            -Dsonar.exclusions=src/test/java/**
+            -Dsonar.coverage.exclusions=src/test/java/**
             # Comma-separated paths to directories containing main source files.
             #-Dsonar.sources= # optional, default is project base directory
             # Comma-separated paths to directories containing test source files.

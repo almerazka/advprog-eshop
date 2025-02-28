@@ -52,6 +52,9 @@ jobs:
           java-version: 17
           distribution: 'zulu'
 
+      - name: Set gradlew as executable
+        run: chmod +x ./gradlew
+
       - name: Build and run tests with coverage
         run: ./gradlew clean build test jacocoTestReport
 

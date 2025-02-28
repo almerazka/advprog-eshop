@@ -13,7 +13,7 @@ Klik link di bawah untuk melihat aplikasi!
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=almerazka_advprog-eshop&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=almerazka_advprog-eshop)
 
 ### Coverage Report
-![image](https://github.com/user-attachments/assets/f67c8c69-dcaa-48e1-b4c0-fb6dcc2f5be2)
+![image](https://github.com/user-attachments/assets/21536243-9691-436c-b517-34de5bcb0312)
 
 <details>
 <summary>Module 1: Coding Standard</summary>
@@ -256,3 +256,79 @@ void setUp() {
 
 ### Apakah implementasi CI/CD sudah sesuai dengan definisinya?
 Menurut saya, implementasi **CI/CD** dalam proyek ini sudah cukup memenuhi prinsip _Continuous Integration_ dan _Continuous Deployment_. Saya menggunakan **GitHub Actions** untuk menjalankan beberapa **workflow** otomatis seperti `ci.yml`, `scorecard.yml`, dan `sonarcloud.yml`. Dimana setiap kali ada perubahan kode, melalui **push** atau **pull request**, **workflow** ini langsung berjalan otomatis untuk memastikan kode diuji dan dianalisis sebelum digabung ke branch utama. **SonarCloud** juga digunakan untuk mengevaluasi kualitas kode dan mengidentifikasi potensi bug. Untuk **CD** sendiri, saya mengandalkan **Koyeb** sebagai platform deployment otomatis. Setelah kode melewati tahap pengujian dan validasi, aplikasi langsung dideploy tanpa perlu proses manual sehingga dapat dipastikan aplikasi selalu dalam versi terbaru. Dengan **workflow** ini, seluruh proses mulai dari kode, pengujian, review, hingga deployment berjalan otomatis, sehingga lebih efisien dan sesuai dengan prinsip CI/CD.
+
+</details>
+<details>
+<summary>Module 3: Maintainability & OO Principles</summary>
+
+## Reflection
+
+### Penerapan Prinsip S.O.L.I.D
+#### 1. **Single Responsibility Principle (SRP)**
+Sebelumnya, `ProductController` menangani semua produk, termasuk ***mobil*** (Car). Ini menyebabkan controller memiliki dua tanggung jawab sekaligus, yaitu mengelola produk umum dan mobil. Dengan memisahkan `CarController` ke dalam file sendiri, kini `ProductController` hanya menangani produk umum, sementara `CarController` fokus pada mobil.
+
+- **HomePageController** menangani `endpoint /`, 
+- **ProductController** menangani `/product`,
+- **CarController** menangani `/car`. 
+
+Ini membuat kode lebih rapi, modular, dan mudah dikelola.
+
+#### 2. **Liskov Substitution Principle (LSP)**
+Jika `CarController` mewarisi `ProductController`, maka ia akan memiliki method-method yang tidak relevan dengan mobil, seperti ***createProduct()*** atau ***editProduct()***. Ini melanggar **LSP** karena objek subclass (`CarController`) tidak bisa menggantikan superclass-nya (`ProductController`) tanpa mengubah perilakunya. Solusinya adalah menghapus _extends_ `ProductController` dan membuat `CarController` berdiri sendiri sehingga masing-masing class memiliki perilaku yang sesuai.
+
+#### 3. **Interface Segregation Principle (ISP)**
+`CarService` sendiri sudah menerapkan **ISP** dengan baik karena hanya berisi method yang relevan untuk operasi ***CRUD (Create, Read, Update, Delete)*** mobil, seperti ***create()***, ***findAll()***, dan ***deleteCarById()***. Jika ada fitur tambahan seperti _filtering_ atau _sorting_, kita bisa membuat _interface_ terpisah tanpa mengubah `CarService`. Dengan cara ini, _interface_ tetap sederhana dan tidak membebani class yang mengimplementasikannya dengan method yang tidak relevan.
+
+#### 4. **Dependency Inversion Principle (DIP)**
+Sebelumnya, `CarController` bergantung langsung pada `CarServiceImpl`, yaitu implementasi konkret dari `CarService`. Ini melanggar **DIP** karena ketergantungan langsung pada detail implementasi. Setelah diperbaiki, `CarController` sekarang bergantung pada `CarService`, yaitu sebuah _interface_ bukan implementasi langsung. Oleh karena itu, saya mengubah tipe data menjadi `CarService`, sehingga kode lebih fleksibel dan memudahkan penggantian implementasi tanpa perlu mengubah `CarController`.
+
+### Keuntungan menggunakan Prinsip S.O.L.I.D
+---
+
+Menurut saya, menggunakan prinsip S.O.L.I.D dalam pengembangan perangkat lunak memberikan banyak keuntungan, terutama dalam hal modularitas, keterbacaan, dan pemeliharaan kode. Dengan kode yang lebih terstruktur, perubahan atau penambahan fitur dapat dilakukan dengan lebih mudah tanpa merusak bagian lain dari sistem. Prinsip seperti ***SRP (Single Responsibility Principle)*** memastikan setiap class hanya memiliki satu tanggung jawab, sehingga kode lebih terorganisir dan tidak bercampur dengan fungsi lain yang tidak relevan. Selain itu, dengan menerapkan ***DIP (Dependency Inversion Principle)*** dan ***ISP (Interface Segregation Principle)***, ketergantungan pada implementasi konkret dapat dikurangi, sehingga memungkinkan fleksibilitas dalam mengganti atau menambah fitur baru tanpa mengubah kode yang sudah ada. 
+
+Salah satu contoh penerapan **SRP** yang paling _simple_ adalah dengan memisahkan `ProductController` dan `CarController`. Sebelumnya, keduanya tergabung dalam satu kelas yang menangani lebih dari satu tanggung jawab, yang melanggar prinsip **SRP**. Namun, dengan pemisahan ini, setiap controller hanya bertanggung jawab atas satu entitas spesifik.
+```java
+@Controller
+@RequestMapping("/product")
+public class ProductController {
+    // hanya menangani Product
+}
+
+@Controller
+@RequestMapping("/car")
+public class CarController {
+    // hanya menangani Car
+}
+
+```
+
+### Kekurangan tidak menggunakan Prinsip S.O.L.I.D
+---
+
+Tanpa menerapkan prinsip S.O.L.I.D, kode menjadi sulit dipelihara, sulit diperluas, dan rentan terhadap _bug_ karena adanya ketergantungan yang tidak semestinya. 
+
+- Jika **SRP** tidak diterapkan, satu class dapat menangani berbagai hal sekaligus, menyebabkan kode sulit dimengerti dan diubah. Contohnya ketika `CarController` dan `ProductController` digabung menjadi satu class `StoreController`, maka perubahan pada **Car** bisa berdampak pada **Product**, meskipun keduanya tidak berhubungan.
+- Selain itu, tanpa **LSP**, subclass dapat memiliki perilaku yang tidak sesuai dengan superclass-nya, seperti jika `CarController` mewarisi `ProductController`, maka akan mendapatkan metode yang tidak relevan dengan **Car**, yang berpotensi menyebabkan _bug_.
+- Tanpa **ISP**, sebuah _interface_ bisa memiliki terlalu banyak metode, memaksa class mengimplementasikan metode yang tidak dibutuhkan, misalnya `CarService` harus mengimplementasikan sebuah metode dari `ProductService`, padahal tidak relevan untuk mobil, sehingga memerlukan implementasi kosong atau melempar _UnsupportedOperationException_.
+```java
+public class CarServiceImpl implements ProductService {
+    @Override
+    public void create(Product product) {
+
+    @Override
+    public void update(Product product) { 
+
+    @Override
+    public void delete(String id) { 
+
+    @Override
+    public void generateReport(Product product) {
+        throw new UnsupportedOperationException("Laporan tidak didukung untuk Car");
+    }
+}
+
+```
+- Jika **DIP** tidak diterapkan, class akan bergantung langsung pada implementasi konkret, bukan pada abstraksi. Misalnya, jika `CarController` langsung bergantung pada `CarServiceImpl` daripada _interface_ `CarService`, maka jika ada perubahan pada implementasi, seluruh class yang bergantung padanya juga harus diubah, yang bertentangan dengan prinsip fleksibilitas dalam pengembangan perangkat lunak.
+
+</details>

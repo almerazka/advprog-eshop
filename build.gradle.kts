@@ -88,6 +88,7 @@ sonar {
 		property("sonar.projectKey", "almerazka_advprog-eshop")
 		property("sonar.organization", "almerazka")
 		property("sonar.host.url", "https://sonarcloud.io")
+		property("sonar.java.coveragePlugin", "jacoco")
 		property("sonar.gradle.skipCompile", "true")
 		property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
 	}

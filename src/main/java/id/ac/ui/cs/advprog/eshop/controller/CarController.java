@@ -15,6 +15,8 @@ class CarController {
     @Autowired
     private CarService carService;
 
+    private static final String REDIRECT_CAR_LIST = "redirect:/listCar";
+
     @GetMapping("/createCar")
     public String createCarPage(Model model) {
         Car car = new Car();
@@ -23,14 +25,14 @@ class CarController {
     }
 
     @PostMapping("/createCar")
-    public String createCarPost(@ModelAttribute Car car, Model model) {
+    public String createCarPost(@ModelAttribute Car car) {
         carService.create(car);
-        return "redirect:listCar";
+        return REDIRECT_CAR_LIST;
     }
 
     @GetMapping("/listCar")
     public String carListPage(Model model) {
-        List <Car> allCars = carService.findAll();
+        List<Car> allCars = carService.findAll();
         model.addAttribute("cars", allCars);
         return "CarList";
     }
@@ -43,14 +45,14 @@ class CarController {
     }
 
     @PostMapping("/editCar")
-    public String editCarPost(@ModelAttribute Car car, Model model) {
+    public String editCarPost(@ModelAttribute Car car) {
         carService.update(car.getCarId(), car);
-        return "redirect:listCar";
+        return REDIRECT_CAR_LIST;
     }
 
     @PostMapping("/deleteCar")
     public String deleteCar(@RequestParam("carId") String carId) {
         carService.deleteCarById(carId);
-        return "redirect:listCar";
+        return REDIRECT_CAR_LIST;
     }
 }

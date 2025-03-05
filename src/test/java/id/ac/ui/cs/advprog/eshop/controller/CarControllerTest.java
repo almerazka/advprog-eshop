@@ -45,9 +45,9 @@ class CarControllerTest {
 
     @Test
     void testCreateCarPost() {
-        String viewName = carController.createCarPost(car, model);
+        String viewName = carController.createCarPost(car);
         verify(carService, times(1)).create(car);
-        assertEquals("redirect:listCar", viewName);
+        assertEquals("redirect:/listCar", viewName);
     }
 
     @Test
@@ -71,15 +71,15 @@ class CarControllerTest {
 
     @Test
     void testEditCarPost() {
-        String viewName = carController.editCarPost(car, model);
+        String viewName = carController.editCarPost(car);
         verify(carService, times(1)).update(car.getCarId(), car);
-        assertEquals("redirect:listCar", viewName);
+        assertEquals("redirect:/listCar", viewName);
     }
 
     @Test
     void testDeleteCar() {
         String viewName = carController.deleteCar("123");
         verify(carService, times(1)).deleteCarById("123");
-        assertEquals("redirect:listCar", viewName);
+        assertEquals("redirect:/listCar", viewName);
     }
 }

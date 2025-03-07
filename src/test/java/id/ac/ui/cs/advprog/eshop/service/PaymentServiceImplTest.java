@@ -147,4 +147,18 @@ public class PaymentServiceImplTest {
         doReturn(null).when(paymentRepository).findById("invalid-id");
         assertNull(paymentService.getPayment("invalid-id"));
     }
+
+    // Unhappy path test: Setting status when the order is not found should not update the order repository
+    @Test
+    void testSetStatusWhenOrderNotFound() {
+        Payment payment = payments.getFirst();
+        when(orderRepository.findById(payment.getId())).thenReturn(null);
+        when(paymentRepository.save(payment)).thenReturn(payment);
+
+        Payment result = paymentService.setStatus(payment, PaymentStatus.SUCCESS.getValue());
+
+        verify(paymentRepository, times(1)).save(payment);
+        verify(orderRepository, never()).save(any());
+        assertEquals(PaymentStatus.SUCCESS, result.getStatus());
+    }
 }

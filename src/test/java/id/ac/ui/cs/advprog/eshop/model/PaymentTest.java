@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
+import enums.PaymentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ class PaymentTest {
     void testCreatePaymentDefaultStatus() {
         assertEquals(id, payment.getId());
         assertEquals(method, payment.getMethod());
-        assertEquals("PENDING", payment.getStatus());
+        assertEquals(PaymentStatus.PENDING, payment.getStatus());
         assertEquals("Jl. Merdeka No.1", payment.getPaymentData().get("address"));
     }
 
@@ -34,14 +35,14 @@ class PaymentTest {
     @Test
     void testCreatePaymentSuccessStatus() {
         payment = new Payment("2", "VOUCHER", "SUCCESS", paymentData);
-        assertEquals("SUCCESS", payment.getStatus());
+        assertEquals(PaymentStatus.SUCCESS, payment.getStatus());
     }
 
     // Happy path test: Test to create a payment with status "REJECTED"
     @Test
     void testCreatePaymentRejectedStatus() {
         payment = new Payment("3", "COD", "REJECTED", paymentData);
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(PaymentStatus.REJECTED, payment.getStatus());
     }
 
     // Unhappy path test: Test to create a payment with an invalid status
@@ -55,7 +56,7 @@ class PaymentTest {
     @Test
     void testSetStatusToSuccess() {
         payment.setStatus("SUCCESS");
-        assertEquals("SUCCESS", payment.getStatus());
+        assertEquals(PaymentStatus.SUCCESS, payment.getStatus());
     }
 
     // Unhappy path test: Test to set an invalid status

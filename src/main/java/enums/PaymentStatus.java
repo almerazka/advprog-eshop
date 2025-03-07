@@ -10,7 +10,7 @@ public enum PaymentStatus {
 
     private final String value;
 
-    private PaymentStatus(String value) {
+    PaymentStatus(String value) {
         this.value = value;
     }
 

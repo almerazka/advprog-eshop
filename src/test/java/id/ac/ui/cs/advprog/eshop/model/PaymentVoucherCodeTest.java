@@ -51,4 +51,21 @@ class PaymentVoucherCodeTest extends PaymentTest {
         PaymentVoucherCode payment = new PaymentVoucherCode("f3978c74-088c-463f-8d3f-ffa1f4a61127", PaymentMethod.VOUCHER.name(), paymentData);
         assertEquals(PaymentStatus.REJECTED, payment.getStatus());
     }
+
+    // Unhappy path test: Test with a null voucher code
+    @Test
+    void testNullVoucherCode() {
+        paymentData.put("voucherCode", null);
+        PaymentVoucherCode payment = new PaymentVoucherCode("f3978c74-088c-463f-8d3f-ffa1f4a61127", PaymentMethod.VOUCHER.name(), paymentData);
+        assertEquals(PaymentStatus.REJECTED, payment.getStatus());
+    }
+
+    // Unhappy path test: Test with a voucher code that is too long
+    @Test
+    void testLongVoucherCode() {
+        paymentData.put("voucherCode", "ESHOP1234567890123");
+        PaymentVoucherCode payment = new PaymentVoucherCode("f3978c74-088c-463f-8d3f-ffa1f4a61127", PaymentMethod.VOUCHER.name(), paymentData);
+        assertEquals(PaymentStatus.REJECTED, payment.getStatus());
+    }
+
 }

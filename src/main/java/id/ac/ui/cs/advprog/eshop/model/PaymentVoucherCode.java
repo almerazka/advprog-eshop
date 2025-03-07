@@ -8,7 +8,6 @@ public class PaymentVoucherCode extends Payment {
     public PaymentVoucherCode(String id, String method, Map<String, String> paymentData) {
         super(id, method, paymentData);
 
-        // Validate the voucher code and set the status accordingly
         String voucherCode = paymentData.get("voucherCode");
         if (isValidVoucherCode(voucherCode)) {
             setStatus(PaymentStatus.SUCCESS.name());

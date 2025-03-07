@@ -19,6 +19,7 @@ class PaymentCODTest extends PaymentTest {
         paymentData = new HashMap<>();
     }
 
+    // Happy path test: Ensures COD payment is successful with valid data
     @Test
     void testValidCODPayment() {
         paymentData.put("address", "Jl. Merdeka No.1");
@@ -28,6 +29,7 @@ class PaymentCODTest extends PaymentTest {
         assertEquals(PaymentStatus.PENDING, payment.getStatus());
     }
 
+    // Unhappy path test: Ensures payment is rejected if the address is empty
     @Test
     void testEmptyAddress() {
         paymentData.put("address", "");
@@ -37,9 +39,9 @@ class PaymentCODTest extends PaymentTest {
         assertEquals(PaymentStatus.REJECTED, payment.getStatus());
     }
 
+    // Unhappy path test: Ensures payment is rejected if the delivery fee is empty
     @Test
     void testEmptyDeliveryFee() {
-        // Set empty deliveryFee
         paymentData.put("address", "Jl. Merdeka No.1");
         paymentData.put("deliveryFee", "");
 
@@ -47,6 +49,7 @@ class PaymentCODTest extends PaymentTest {
         assertEquals(PaymentStatus.REJECTED, payment.getStatus());
     }
 
+    // Unhappy path test: Ensures payment is rejected if the address is `null`
     @Test
     void testNullAddress() {
         paymentData.put("address", null);
@@ -56,6 +59,7 @@ class PaymentCODTest extends PaymentTest {
         assertEquals(PaymentStatus.REJECTED, payment.getStatus());
     }
 
+    // Unhappy path test: Ensures payment is rejected if the delivery fee is `null`
     @Test
     void testNullDeliveryFee() {
         paymentData.put("address", "Jl. Merdeka No.1");
@@ -65,6 +69,7 @@ class PaymentCODTest extends PaymentTest {
         assertEquals(PaymentStatus.REJECTED, payment.getStatus());
     }
 
+    // Unhappy path test: Ensures payment is rejected if both address and delivery fee are empty
     @Test
     void testBothEmptyFields() {
         paymentData.put("address", "");

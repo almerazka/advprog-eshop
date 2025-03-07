@@ -161,4 +161,22 @@ public class PaymentServiceImplTest {
         verify(orderRepository, never()).save(any());
         assertEquals(PaymentStatus.SUCCESS, result.getStatus());
     }
+
+    // Unhappy path: Ensuring that setting payment status to PENDING does not modify the order status
+    @Test
+    void testOrderNotModifiedWhenStatusIsNeither() {
+        Payment payment = payments.getFirst();
+        Order order = orders.getFirst();
+
+        doReturn(order).when(orderRepository).findById(payment.getId());
+        String originalOrderStatus = order.getStatus();
+        Payment result = paymentService.setStatus(payment, PaymentStatus.PENDING.getValue());
+
+        verify(paymentRepository, times(1)).save(payment);
+        verify(orderRepository, times(1)).findById(payment.getId());
+        verify(orderRepository, never()).save(any(Order.class));
+
+        assertEquals(PaymentStatus.PENDING, result.getStatus());
+        assertEquals(originalOrderStatus, order.getStatus());
+    }
 }

@@ -4,22 +4,23 @@ import enums.PaymentStatus;
 import enums.PaymentMethod;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PaymentCODTest {
+class PaymentCODTest extends PaymentTest {
     private Map<String, String> paymentData;
 
     @BeforeEach
     void setUp() {
+        super.setUp();
         paymentData = new HashMap<>();
     }
 
     @Test
     void testValidCODPayment() {
-        // Set valid address and deliveryFee
         paymentData.put("address", "Jl. Merdeka No.1");
         paymentData.put("deliveryFee", "10000");
 
@@ -29,7 +30,6 @@ class PaymentCODTest {
 
     @Test
     void testEmptyAddress() {
-        // Set empty address
         paymentData.put("address", "");
         paymentData.put("deliveryFee", "10000");
 
@@ -49,7 +49,6 @@ class PaymentCODTest {
 
     @Test
     void testNullAddress() {
-        // Set null address
         paymentData.put("address", null);
         paymentData.put("deliveryFee", "10000");
 
@@ -59,7 +58,6 @@ class PaymentCODTest {
 
     @Test
     void testNullDeliveryFee() {
-        // Set null deliveryFee
         paymentData.put("address", "Jl. Merdeka No.1");
         paymentData.put("deliveryFee", null);
 
@@ -69,7 +67,6 @@ class PaymentCODTest {
 
     @Test
     void testBothEmptyFields() {
-        // Set both address and deliveryFee as empty
         paymentData.put("address", "");
         paymentData.put("deliveryFee", "");
 
